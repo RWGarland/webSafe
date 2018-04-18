@@ -1,75 +1,83 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="index.css">
-	<script src="index.js"></script>
-</head>
-<body> 
-<div id="myNav" class="overlay">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <div class="overlay-content">
-     <form method="post" action="index.php">
-                   Name: <input type="text" placeholder="Your Name" name="name">
-                Note: <textarea type="text" placeholder="Add..." name="note"></textarea>
-                    <input type="submit" name="SubmitButton">
-                </form>
+  <?php
+        class MyAPI
+        {    
+            private $rc = 500;
+            private $data = null;
+            private $db = null;
       
-       <?php
-      function insertData()
-      {
-       
-            $conn = mysqli_connect("localhost", "rg425", "rg425", "rg425_test");
-
-            if($conn === false){
-                die("ERROR: Could not connect. " . mysqli_connect_error());
+            
+        public function _construct()
+            
+            {
+                $this->data = array();
+                $this->database = new mysqli("itsuite.it.brighton.ac.uk", "rg425", "rg425", "rg425_ass2");
             }
+            
+        public function _destruct()
+        
+            {
+                $this->db->close();
+            }
+                
+        public function handleRequest(){
+                    
+                    if($_SERVER['REQUEST_METHOD'] === 'GET') 
+                        {
+                            $this->getItem(); // return item
+                        }
+            else if($_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $this->postItem(); // create item
+                                                            }
+                        else    {
+                            $this->rc = 400; // bad request
+                                }
+            
+            http_response_code($this->rc); // set status code
+                        
+            if($this->rc == 200) {
+            header('content-type: application/json'); // set header
+            echo json_encode($this->data); // serve data 
+                        }
+                }
+            
+        private function retrieveData() {
+          
+            if(isset($_GET['oid'])) {
+                $sql = "SELECT * FROM ass2table WHERE oid=".$_GET['oid'];
+            }
+        
+                $result = mysqli_query('SELECT * FROM ass2table');
+            while ($row = mysqli_fetch_array($result)) {
+                echo $row['name'];
+                echo $row['notes'];
+            }
+              
+        retrieveData();
+          
 
-
-           if(isset($_POST['name'], $_POST['note'])){
+        private function insertData()
+           if(isset($_POST['submit'])){
 
                $name = $_POST['name'];
-               $note = $_POST['note'];       
+               $notes = $_POST['notes'];       
 
 
 
-            $sql =  "INSERT INTO assignmenttest (name, note)
-                VALUES ('".$_POST["name"]."','".$_POST["note"]."')";
+            $sql =  "INSERT INTO ass2table (name, notes)
+                VALUES ('".$_POST["name"]."','".$_POST["notes"]."')";
 
            }
 
                $result = mysqli_query($conn, $sql);
       
-      }
+        }
       
-       insertData();
+      insertData();
+                
+
+    }
        
-      function retrieveData() {
-          
-       if(isset($_GET['name'])) {
-           $sql = "SELECT * FROM assignmenttest WHERE name=".$_GET['name'];
-       }
-          
+                $api = new MyAPI();
+                $api->handleRequest();
         
     ?>
-    
-    
-      
-  </div>
-</div>
-
-<h2>V and A Webpage</h2>
-    <form id="send">
-                <fieldset> <!--Puts the fieldset in for the search bar-->
-                    <legend>Search the V & A</legend>
-                        <input id="submitBox" type="text" name="submitBox" required />
-                        <input id="submitButton" type="submit" />
-                </fieldset>
-            </form>
-<span style="font-size:30px;cursor:pointer" onclick="openNav()">open</span>
-
-    
-     
-        </body>
-</html>
