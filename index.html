@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="index.css">
+	<script src="index.js"></script>
+</head>
+<body> 
+
+	<form id="search">
+		<input id="query" type="text">
+		<input id="submit" type="submit" value="Search the V&A collection">
+	</form>	
+	
+	<div id="loading"><img src="res/loading.svg" /></div>
+
+	<div id="result"></div>
+
+	<div id="notes_overlay">
+		<a id="notes_close" href="">close</a> 
+		<form id="notes_form">
+			<img id="notes_img" src="" />
+			<label for="notes_name">Your name</label><input id="notes_name" type="text" placeholder="Anonymous">
+			<textarea id="notes_text" placeholder="Add notes..."></textarea>
+			<input id="notes_add" type="button" value="Add notes">
+		</form>	
+		<hr>
+		<div id="notes_loading"><img src="res/loading64.gif" /> loading comments...</div>
+		<div id="notes_list"></div>
+	</div>
+</body>
+</html>
